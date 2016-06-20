@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>EasyConnect Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./jquery.min.js"></script>
+    <script src="./main.js"></script>
+  </head>
+  <body>
+    <fieldset>
+      <legend>Level</legend>
+      <button onclick="send('Level', 0)">0</button>
+      <button onclick="send('Level', 1)">1</button>
+      <button onclick="send('Level', 2)">2</button>
+      <button onclick="send('Level', 3)">3</button>
+    </fieldset>
+    <button onclick="send('Button', 1)">Button</button>
+    <div id="message"></div>
+  </body>
+</html>

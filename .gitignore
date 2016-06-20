@@ -1,0 +1,7 @@
+*.pyc
+*.sw[op]
+*.egg-info
+.cache
+.eggs
+dist
+build

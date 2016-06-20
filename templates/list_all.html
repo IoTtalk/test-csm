@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/list_all.css">
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/main.js"></script>
+  </head>
+  <body>
+    <ul id="all">
+{% for d_id, d_data in sorted_dict(containers) %}
+      <li id="{{ d_id }}">{{ d_id }}
+        <button onclick="send_control('RESUME', ['{{ d_id }}'])">RESUME</button>
+        <button onclick="send_control('SUSPEND', ['{{ d_id }}'])">SUSPEND</button>
+        <button onclick="send_control('SET_DF_STATUS', ['{{ d_id }}'])">SET_DF_STATUS</button>
+        <ul>
+          <li>Profile
+            <ul>
+  {% for key, value in sorted_dict(containers[d_id]['profile']) %}
+              <li>{{ key }} : {{ value }}</li>
+  {% end %}
+            </ul>
+          </li>
+  {% for df_name in containers[d_id]['profile']['df_list'] %}
+          <li><a href="/{{ d_id }}/{{ df_name }}">{{ df_name }}</a>
+    {% if not df_name.startswith('_') %}
+            <button id="{{ d_id }}-{{ df_name }}-select"
+                onclick="send_control('SELECT', ['{{ d_id }}', '{{ df_name }}'])"
+            >
+      {% if containers[d_id]['selected'][df_name] %}
+              Selected
+      {% else %}
+              Not selected
+      {% end %}
+            </button>
+            {"data": [<input type="text" id="{{ d_id }}-{{ df_name }}-push">]}
+            <button onclick="push('{{ d_id }}', '{{ df_name }}')">push</button>
+    {% end %}
+            <ul id="{{ d_id }}-{{ df_name }}">
+    {% for sample in containers[d_id][df_name] %}
+      {% if len(str(sample)) > 200 %}
+              <li>[Data too long]</li>
+      {% else %}
+              <li>{{ sample }}</li>
+      {% end %}
+    {% end %}
+            </ul>
+          </li>
+  {% end %}
+        </ul>
+      </li>
+{% end %}
+    </ul>
+{% if len(containers) == 0 %}
+    Empty
+{% end %}
+  </body>
+</html>

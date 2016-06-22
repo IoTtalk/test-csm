@@ -75,12 +75,46 @@ class TreeHandler(NoCacheHandler):
 
 
 class MonitorHandler(NoCacheHandler):
-    ''' This class handles register/deregister API '''
+    ''' This class handles the monitor page '''
     def get(self):
         logging('monitor', 'OK')
         self.render('templates/list_all.html',
                 containers=containers,
                 sorted_dict=sorted_dict)
+
+
+class SessionHandler(NoCacheHandler):
+    ''' This class handles register/deregister API '''
+    def post(self, d_id):
+        log_tag = 'register'
+        profile = tornado.escape.json_decode(self.request.body)
+        for attr in ('d_name', 'dm_name', 'u_name', 'is_sim', 'df_list'):
+            if attr not in profile['profile']:
+                msg = '{} not in profile'.format(attr)
+                logging(log_tag, msg, args=d_id)
+                self.return_404(msg)
+                return
+
+        register(d_id, profile)
+
+        logging(log_tag, 'OK', args=d_id)
+        self.finish('OK')
+
+    def delete(self, d_id):
+        log_tag = 'deregister'
+        if d_id not in containers:
+            self.return_404(log_tag, 'd_id not found')
+            return
+
+        deregister(d_id)
+
+        logging(log_tag, 'OK', args=d_id)
+        self.finish('OK')
+
+    def return_404(self, log_args, msg='NO'):
+        self.clear()
+        self.set_status(404)
+        self.finish(msg)
 
 
 def register(d_id, profile):
@@ -102,41 +136,12 @@ def register(d_id, profile):
         df_name: False for df_name in df_list if not df_name.startswith('_')
     }
 
+    MyWebSocketHandler.broadcast('RELOAD')
 
-class SessionHandler(NoCacheHandler):
-    ''' This class handles register/deregister API '''
-    def post(self, d_id):
-        log_tag = 'register'
-        profile = tornado.escape.json_decode(self.request.body)
-        for attr in ('d_name', 'dm_name', 'u_name', 'is_sim', 'df_list'):
-            if attr not in profile['profile']:
-                msg = '{} not in profile'.format(attr)
-                logging(log_tag, msg, args=d_id)
-                self.return_404(msg)
-                return
 
-        register(d_id, profile)
-
-        MyWebSocketHandler.broadcast('RELOAD')
-        logging(log_tag, 'OK', args=d_id)
-        self.finish('OK')
-
-    def delete(self, d_id):
-        log_tag = 'deregister'
-        if d_id not in containers:
-            self.return_404(log_tag, 'd_id not found')
-            return
-
-        del containers[d_id]
-
-        MyWebSocketHandler.broadcast('RELOAD')
-        logging(log_tag, 'OK', args=d_id)
-        self.finish('OK')
-
-    def return_404(self, log_args, msg='NO'):
-        self.clear()
-        self.set_status(404)
-        self.finish(msg)
+def deregister(d_id):
+    del containers[d_id]
+    MyWebSocketHandler.broadcast('RELOAD')
 
 
 def push(d_id, df_name, data):
@@ -275,6 +280,10 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
                 )
             )
             push(d_id, CONTROL_ODF, ['SET_DF_STATUS', {'cmd_params': [flags]}])
+        elif cmd == 'DEREGISTER':
+            d_id = args[0]
+            deregister(d_id)
+            pass
 
     def on_close(self):
         logging('websocket', 'WebSocket closed')

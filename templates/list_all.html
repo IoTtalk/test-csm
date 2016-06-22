@@ -8,6 +8,7 @@
     <ul id="all">
 {% for d_id, d_data in sorted_dict(containers) %}
       <li id="{{ d_id }}">{{ d_id }}
+        <button onclick="send_control('DEREGISTER', ['{{ d_id }}'])">DEREGISTER</button>
         <button onclick="send_control('RESUME', ['{{ d_id }}'])">RESUME</button>
         <button onclick="send_control('SUSPEND', ['{{ d_id }}'])">SUSPEND</button>
         <button onclick="send_control('SET_DF_STATUS', ['{{ d_id }}'])">SET_DF_STATUS</button>

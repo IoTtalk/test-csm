@@ -2,12 +2,18 @@ $(function () {
     var host = window.location.hostname;
     var port = window.location.port;
 
+    var connection_failed = false;
+
     var onopen = function () {
+        if (connection_failed) {
+            window.location.reload();
+        }
         console.log('Connected');
     };
 
     var onclose = function () {
         console.log('Websocket broken, trying to reconnect after 3 seconds');
+        connection_failed = true;
         setTimeout(function () {
             ws = new WebSocket('ws://'+ host +':'+ port +'/websocket');
             ws.onopen = onopen;
@@ -58,20 +64,7 @@ $(function () {
     ws.onerror = onclose;
 
     send_control = function (cmd, args) {
-        switch (cmd) {
-            case 'RESUME':
-                ws.send(cmd +'|'+ args[0]);
-                break;
-            case 'SUSPEND':
-                ws.send(cmd +'|'+ args[0]);
-                break;
-            case 'SELECT':
-                ws.send(cmd +'|'+ args[0] +'|'+ args[1]);
-                break;
-            case 'SET_DF_STATUS':
-                ws.send(cmd +'|'+ args[0]);
-                break;
-        }
+        ws.send(cmd +'|'+ args.join('|'));
     }
 
     push = function (d_id, df_name) {

@@ -158,7 +158,12 @@ def push(d_id, df_name, data):
 
 
 def data_repr (data):
-    return json.dumps(data)
+    return '{} [{}]'.format(
+        data[0],
+        ', '.join(
+            '{:.5}'.format(p) if isinstance(p, float) else str(p) for p in data[1]
+        )
+    )
 
 
 class DataHandler(NoCacheHandler):

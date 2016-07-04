@@ -8,12 +8,14 @@ $(function () {
         if (connection_failed) {
             window.location.reload();
         }
+        document.title = host +':'+ port;
         console.log('Connected');
     };
 
     var onclose = function () {
         console.log('Websocket broken, trying to reconnect after 3 seconds');
         connection_failed = true;
+        document.title = host +':'+ port +' - '+ 'Reconnecting...';
         setTimeout(function () {
             ws = new WebSocket('ws://'+ host +':'+ port +'/websocket');
             ws.onopen = onopen;

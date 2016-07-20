@@ -60,12 +60,18 @@ def sorted_dict(dt):
     return sorted(dt.items(), key=lambda x: x[0])
 
 
-class NoCacheHandler(tornado.web.RequestHandler):
+class BaseHandler(tornado.web.RequestHandler):
     def set_extra_headers(self, path):
         self.set_header("Cache-control", "no-cache")
 
 
-class TreeHandler(NoCacheHandler):
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, DELETE, GET, OPTIONS')
+
+
+class TreeHandler(BaseHandler):
     ''' This class handles tree API '''
     def get(self):
         logging('tree', 'OK')
@@ -74,7 +80,7 @@ class TreeHandler(NoCacheHandler):
         ))
 
 
-class MonitorHandler(NoCacheHandler):
+class MonitorHandler(BaseHandler):
     ''' This class handles the monitor page '''
     def get(self):
         logging('monitor', 'OK')
@@ -83,7 +89,7 @@ class MonitorHandler(NoCacheHandler):
                 sorted_dict=sorted_dict)
 
 
-class SessionHandler(NoCacheHandler):
+class SessionHandler(BaseHandler):
     ''' This class handles register/deregister API '''
     def post(self, d_id):
         log_tag = 'register'
@@ -110,6 +116,11 @@ class SessionHandler(NoCacheHandler):
 
         logging(log_tag, 'OK', args=d_id)
         self.finish('OK')
+
+    def options(self):
+        # no body
+        self.set_status(204)
+        self.finish()
 
     def return_404(self, log_args, msg='NO'):
         self.clear()
@@ -166,7 +177,7 @@ def data_repr (data):
     )
 
 
-class DataHandler(NoCacheHandler):
+class DataHandler(BaseHandler):
     ''' This class handles push/pull API '''
     def put(self, d_id, df_name):
         log_tag = 'push'
@@ -233,6 +244,11 @@ class DataHandler(NoCacheHandler):
 
         logging(log_tag, 'OK', args=(d_id, df_name))
         self.finish(json.dumps({'samples': ret}))
+
+    def options(self):
+        # no body
+        self.set_status(204)
+        self.finish()
 
     def return_404(self, log_args, msg='NO'):
         self.clear()

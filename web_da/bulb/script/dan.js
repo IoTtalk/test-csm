@@ -65,6 +65,10 @@ var dan = (function () {
     }
 
     function pull_ctl () {
+        if (!_registered) {
+            return;
+        }
+
         function pull_ctl_callback (dataset) {
             if (has_new_data(dataset, _ctl_timestamp)) {
                 _ctl_timestamp = dataset[0][0];
@@ -82,7 +86,11 @@ var dan = (function () {
     }
 
     function pull_odf (index) {
-        if (index >= _df_list.length) {
+        if (!_registered) {
+            return;
+        }
+
+        if (_suspended || index >= _df_list.length) {
             setTimeout(pull_ctl, POLLING_INTERVAL);
             return;
         }

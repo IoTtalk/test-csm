@@ -13,7 +13,7 @@ $(function () {
         'dm_name': 'Bulb',
         'u_name': 'yb',
         'is_sim': false,
-        'df_list': ['Luminance', 'IDF'],
+        'df_list': ['Luminance', 'Mouse'],
     }, function (result) {
         console.log('register:', result);
     });
@@ -21,4 +21,8 @@ $(function () {
     $('.bulb-top, .bulb-middle-1, .bulb-middle-2, .bulb-middle-3, .bulb-bottom, .night').css(
         {'background': 'rgb(255, 255, 255)'}
     );
+
+    $(window).mousemove(function (evt) {
+        dan.push('Mouse', [evt.clientX, evt.clientY]);
+    });
 });

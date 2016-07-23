@@ -82,7 +82,7 @@ var dan = (function () {
             pull_odf(0);
         }
 
-        csmapi.pull('__Ctl_O__', pull_ctl_callback);
+        csmapi.pull(_mac_addr, '__Ctl_O__', pull_ctl_callback);
     }
 
     function pull_odf (index) {
@@ -110,7 +110,7 @@ var dan = (function () {
             pull_odf(index + 1);
             return;
         }
-        csmapi.pull(_df_name, pull_odf_callback);
+        csmapi.pull(_mac_addr, _df_name, pull_odf_callback);
     }
 
     function handle_command_message (data) {
@@ -146,8 +146,13 @@ var dan = (function () {
         return true;
     }
 
+    function push (idf_name, data, callback) {
+        csmapi.push(_mac_addr, idf_name, data, callback);
+    }
+
     return {
         'init': init,
         'register': register,
+        'push': push,
     };
 })();

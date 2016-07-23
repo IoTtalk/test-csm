@@ -36,28 +36,36 @@ var csmapi = (function () {
         });
     }
 
-    function pull (odf_name, callback) {
+    function pull (mac_addr, odf_name, callback) {
         $.ajax({
             type: 'GET',
-            url: ENDPOINT +'/'+ _mac_addr +'/'+ odf_name,
+            url: ENDPOINT +'/'+ mac_addr +'/'+ odf_name,
             contentType:"application/json; charset=utf-8",
         }).done(function (text) {
-            callback(JSON.parse(text)['samples']);
+            if (callback) {
+                callback(JSON.parse(text)['samples']);
+            }
         }).fail(function () {
-            callback([]);
+            if (callback) {
+                callback([]);
+            }
         });
     }
 
-    function push (idf_name, data, callback) {
+    function push (mac_addr, idf_name, data, callback) {
         $.ajax({
             type: 'PUT',
-            url: ENDPOINT +'/'+ _mac_addr +'/'+ idf_name,
+            url: ENDPOINT +'/'+ mac_addr +'/'+ idf_name,
             data: JSON.stringify({'data': data}),
             contentType:"application/json; charset=utf-8",
         }).done(function () {
-            callback(true);
+            if (callback) {
+                callback(true);
+            }
         }).fail(function () {
-            callback(false);
+            if (callback) {
+                callback(false);
+            }
         });
     }
 

@@ -147,7 +147,12 @@ var dan = (function () {
     }
 
     function push (idf_name, data, callback) {
-        csmapi.push(_mac_addr, idf_name, data, callback);
+        if (idf_name == 'Control') {
+            idf_name = '__Ctl_I__';
+        }
+        if (idf_name == '__Ctl_I__' || _df_selected[idf_name]) {
+            csmapi.push(_mac_addr, idf_name, data, callback);
+        }
     }
 
     return {

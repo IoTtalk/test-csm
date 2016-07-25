@@ -307,15 +307,15 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 application = tornado.web.Application([
-    tornado.web.url(r'/static/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),
-    tornado.web.url(r'/web_da/(.*)', tornado.web.StaticFileHandler, {
+    tornado.web.url(r'/static/(.*)$', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),
+    tornado.web.url(r'/web_da/(.*)$', tornado.web.StaticFileHandler, {
             'path': WEB_DA_PATH,
             'default_filename': 'index.html',
         }),
     tornado.web.url(r'/$', MonitorHandler),
     tornado.web.url(r'/tree$', TreeHandler),
     tornado.web.url(r'/list_all$', MonitorHandler),
-    tornado.web.url(r'/websocket', MyWebSocketHandler),
+    tornado.web.url(r'/websocket$', MyWebSocketHandler),
     tornado.web.url(r'/([^/]*)$', SessionHandler),
     tornado.web.url(r'/(.*)/(.*)$', DataHandler),
 ])

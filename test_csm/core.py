@@ -11,7 +11,7 @@ import tornado.web
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_PATH = os.path.join(ROOT_DIR, 'static')
-WEB_DA_PATH = os.path.join(ROOT_DIR, 'web_da')
+WEB_DA_PATH = os.path.join(ROOT_DIR, 'webda')
 HISTORY_MAX = 5
 CONTROL_IDF = '__Ctl_I__'
 CONTROL_ODF = '__Ctl_O__'
@@ -71,6 +71,15 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Methods', 'POST, DELETE, GET, OPTIONS')
 
 
+class WebdaHandler(BaseHandler):
+    ''' This class handles tree API '''
+    def get(self):
+        logging('webda', 'OK')
+        self.render('templates/webda.html',
+                webda_list=os.listdir(WEB_DA_PATH)
+        )
+
+
 class TreeHandler(BaseHandler):
     ''' This class handles tree API '''
     def get(self):
@@ -85,8 +94,10 @@ class MonitorHandler(BaseHandler):
     def get(self):
         logging('monitor', 'OK')
         self.render('templates/list_all.html',
+                webda_list=os.listdir(WEB_DA_PATH),
                 containers=containers,
-                sorted_dict=sorted_dict)
+                sorted_dict=sorted_dict
+        )
 
 
 class SessionHandler(BaseHandler):
@@ -324,7 +335,8 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
 
 application = tornado.web.Application([
     tornado.web.url(r'/static/(.*)$', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),
-    tornado.web.url(r'/web_da/(.*)$', tornado.web.StaticFileHandler, {
+    tornado.web.url(r'/webda/?$', WebdaHandler),
+    tornado.web.url(r'/webda/(.*)$', tornado.web.StaticFileHandler, {
             'path': WEB_DA_PATH,
             'default_filename': 'index.html',
         }),

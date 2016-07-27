@@ -1,6 +1,5 @@
 var csmapi = (function () {
     var ENDPOINT = 'http://localhost:9999';
-    var _mac_addr = '';
 
     function set_endpoint (endpoint) {
         ENDPOINT = endpoint;
@@ -11,28 +10,35 @@ var csmapi = (function () {
     }
 
     function register (mac_addr, profile, callback) {
-        _mac_addr = mac_addr;
         $.ajax({
             type: 'POST',
             url: ENDPOINT +'/'+ mac_addr,
             data: JSON.stringify({'profile': profile}),
             contentType:"application/json; charset=utf-8",
         }).done(function () {
-            callback(true);
+            if (callback) {
+                callback(true);
+            }
         }).fail(function () {
-            callback(false);
+            if (callback) {
+                callback(false);
+            }
         });
     }
 
-    function deregister (callback) {
+    function deregister (mac_addr, callback) {
         $.ajax({
             type: 'DELETE',
-            url: ENDPOINT +'/'+ _mac_addr,
+            url: ENDPOINT +'/'+ mac_addr,
             contentType:"application/json; charset=utf-8",
         }).done(function () {
-            callback(true);
+            if (callback) {
+                callback(true);
+            }
         }).fail(function () {
-            callback(false);
+            if (callback) {
+                callback(false);
+            }
         });
     }
 
@@ -41,9 +47,13 @@ var csmapi = (function () {
             type: 'GET',
             url: ENDPOINT +'/'+ mac_addr +'/'+ odf_name,
             contentType:"application/json; charset=utf-8",
-        }).done(function (text) {
+        }).done(function (obj) {
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+
             if (callback) {
-                callback(JSON.parse(text)['samples']);
+                callback(obj['samples']);
             }
         }).fail(function () {
             if (callback) {

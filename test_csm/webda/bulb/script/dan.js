@@ -29,11 +29,12 @@ var dan = (function () {
     }
 
     function register (endpoint, profile, callback) {
+        profile['d_name'] =
+                profile['dm_name'] + _mac_addr.slice(_mac_addr.length - 4);
         _profile = profile;
         csmapi.set_endpoint(endpoint);
 
         var retry_count = 0;
-
         function register_callback (result) {
             if (result) {
                 if (!_registered) {
@@ -155,9 +156,15 @@ var dan = (function () {
         }
     }
 
+    function deregister (callback) {
+        _registered = false;
+        csmapi.deregister(_mac_addr, callback);
+    }
+
     return {
         'init': init,
         'register': register,
         'push': push,
+        'deregister': deregister,
     };
 })();

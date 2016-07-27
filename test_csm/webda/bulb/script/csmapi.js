@@ -55,9 +55,9 @@ var csmapi = (function () {
             if (callback) {
                 callback(obj['samples']);
             }
-        }).fail(function () {
+        }).fail(function (error) {
             if (callback) {
-                callback([]);
+                callback([], error);
             }
         });
     }

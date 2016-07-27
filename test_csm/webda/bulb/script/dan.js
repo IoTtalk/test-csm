@@ -70,7 +70,7 @@ var dan = (function () {
             return;
         }
 
-        function pull_ctl_callback (dataset) {
+        function pull_ctl_callback (dataset, error) {
             if (has_new_data(dataset, _ctl_timestamp)) {
                 _ctl_timestamp = dataset[0][0];
                 if (handle_command_message(dataset[0][1])) {
@@ -98,7 +98,7 @@ var dan = (function () {
 
         var _df_name = _df_list[index];
 
-        function pull_odf_callback (dataset) {
+        function pull_odf_callback (dataset, error) {
             if (has_new_data(dataset, _df_timestamp[_df_list[index]])) {
                 _df_timestamp[_df_list[index]] = dataset[0][0];
                 _pull(_df_list[index], dataset[0][1]);

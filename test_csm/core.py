@@ -105,7 +105,7 @@ class SessionHandler(BaseHandler):
     def post(self, d_id):
         log_tag = 'register'
         profile = tornado.escape.json_decode(self.request.body)
-        for attr in ('d_name', 'dm_name', 'u_name', 'is_sim', 'df_list'):
+        for attr in ('d_name', 'dm_name', 'is_sim', 'df_list'):
             if attr not in profile['profile']:
                 msg = '{} not in profile'.format(attr)
                 logging(log_tag, msg, args=d_id)

@@ -8,10 +8,15 @@ $(function () {
         }
     }
 
-    var mac_addr = '';
-    for (var i = 0; i < 12; i++) {
-        mac_addr += '0123456789abcdef'[Math.floor(Math.random() * 16)];
-    }
+    var mac_addr = (function () {
+        function s () {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s() + s() + s();
+    })();
+
 
     console.log('Random mac_addr generated:', mac_addr);
 

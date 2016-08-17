@@ -1,4 +1,4 @@
-const dai = function (profile) {
+const dai = function (profile, ida) {
     var df_func = {};
     var mac_addr = (function () {
         function s () {
@@ -23,18 +23,28 @@ const dai = function (profile) {
     }
 
     function pull (odf_name, data) {
-        if (df_func[odf_name]) {
-            df_func[odf_name](data);
-        }
-        else if (odf_name == 'Control') {
-            if (data[0] == 'SET_DF_STATUS') {
+        if (odf_name == 'Control') {
+            switch (data[0]) {
+            case 'SET_DF_STATUS':
                 dan.push('Control', ['SET_DF_STATUS_RSP', data[1]], function (res) {});
+                break;
+            case 'RESUME':
+                ida.suspended = false;
+                dan.push('Control', ['RESUME_RSP', ['OK']], function (res) {});
+                break;
+            case 'SUSPEND':
+                ida.suspended = true;
+                dan.push('Control', ['SUSPEND_RSP', ['OK']], function (res) {});
+                break;
             }
+        } else {
+            df_func[odf_name](data);
         }
     }
 
     function initCallback (result) {
         console.log('register:', result);
+        ida.iot_app();
     }
 
     dan.init(pull, csmapi.get_endpoint(), mac_addr, profile, initCallback);

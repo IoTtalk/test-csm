@@ -47,11 +47,19 @@ const dai = function (profile, ida) {
         ida.iot_app();
     }
 
+    function deregisterCallback (result) {
+        console.log('deregister:', result);
+    }
+
+    function deregister () {
+        dan.deregister(deregisterCallback);
+    }
+
     dan.init(pull, csmapi.get_endpoint(), mac_addr, profile, initCallback);
-    window.onunload = dan.deregister;
-    window.onbeforeunload = dan.deregister;
-    window.onclose = dan.deregister;
-    window.onpagehide = dan.deregister;
+    window.onunload = deregister;
+    window.onbeforeunload = deregister;
+    window.onclose = deregister;
+    window.onpagehide = deregister;
 };
 
 /*==Basic==*/

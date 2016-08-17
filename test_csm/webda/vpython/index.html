@@ -2,20 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <script src="/webda/vpython/js/jquery.min.js"></script>
-  <script src="/webda/vpython/js/jquery.mousewheel.js"></script>
-  <script src="/webda/vpython/js/jquery-ui.custom.min.js"></script>
-  <script src="/webda/vpython/js/RScompiler.2.1.min.js"></script>
-  <script src="/webda/vpython/js/RSrun.2.1.min.js"></script>
-  <script src="/webda/vpython/js/compiler.2.1.min.js"></script>
-  <script src="/webda/vpython/js/glow.2.1.min.js"></script>
-  <script src="/webda/vpython/js/csmapi.js"></script>
-  <script src="/webda/vpython/js/dan.js"></script>
-  <script src="/webda/vpython/js/app.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/da-list.js"></script>
+  <link rel="stylesheet" href="css/da-list.css">
   <title>VPython</title>
 </head>
 <body>
-  <div id="glowscript" class="glowscript"></div>
-
+  <table id="container">
+    <tbody>
+      <tr>
+        <td>
+          <ul id='da-list'>
+          {% for da in listdir('py') %}
+            <li><a href='#'>{{ da.split('.py')[0] }}</a></li>
+          {% end %}
+          </ul>
+        </td>
+        <td>
+          <iframe id="main-frame" frameborder="0" width="100%" height="90%"></iframe>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>

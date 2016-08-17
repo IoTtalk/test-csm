@@ -98,6 +98,11 @@ var dan = (function () {
 
         var _df_name = _df_list[index];
 
+        if (!_df_is_odf[_df_name] || !_df_selected[_df_name]) {
+            pull_odf(index + 1);
+            return;
+        }
+
         function pull_odf_callback (dataset, error) {
             if (has_new_data(dataset, _df_timestamp[_df_list[index]])) {
                 _df_timestamp[_df_list[index]] = dataset[0][0];
@@ -105,11 +110,6 @@ var dan = (function () {
             }
 
             pull_odf(index + 1);
-        }
-
-        if (!_df_is_odf[_df_name] || !_df_selected[_df_name]) {
-            pull_odf(index + 1);
-            return;
         }
         csmapi.pull(_mac_addr, _df_name, pull_odf_callback);
     }
@@ -151,6 +151,7 @@ var dan = (function () {
         if (idf_name == 'Control') {
             idf_name = '__Ctl_I__';
         }
+        _df_is_odf[idf_name] = false;
         if (idf_name == '__Ctl_I__' || _df_selected[idf_name]) {
             csmapi.push(_mac_addr, idf_name, data, callback);
         }

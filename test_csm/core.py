@@ -62,12 +62,12 @@ def sorted_dict(dt):
 
 class BaseHandler(tornado.web.RequestHandler):
     def set_extra_headers(self, path):
-        self.set_header("Cache-control", "no-cache")
+        self.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
 
 
     def set_default_headers(self):
-        self.set_header("Access-Control-Allow-Origin", "*")
-        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Headers', 'x-requested-with')
         self.set_header('Access-Control-Allow-Methods', 'POST, DELETE, GET, OPTIONS')
 
 

@@ -17,7 +17,7 @@ $(function () {
 
     var profile = {
         'dm_name': 'Bulb',
-        'df_list': [Luminance],
+        'df_list': [Luminance, Mouse],
     }
 
     var ida = {
